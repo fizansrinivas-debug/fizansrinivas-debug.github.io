@@ -1,0 +1,456 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoga Image Quiz</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(rgba(0,0,0,0.7),
+    rgba(255,140,0,0.3)),
+    url("https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1600");
+    background-size:cover;
+    background-position:center;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    width:900px;
+    background:rgba(0,0,0,0.85);
+    padding:25px;
+    border-radius:25px;
+    text-align:center;
+    color:white;
+    box-shadow:0 0 25px orange;
+}
+
+h1{
+    color:orange;
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    font-size:22px;
+    margin-bottom:20px;
+}
+
+#qno{
+    font-size:22px;
+    color:#ffcc66;
+    margin-bottom:15px;
+}
+
+#question{
+    font-size:30px;
+    margin:20px 0;
+}
+
+#options{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    margin-top:20px;
+}
+
+.optionImg{
+    width:320px;
+    height:220px;
+    object-fit:contain;
+    background:white;
+    border:5px solid white;
+    border-radius:20px;
+    cursor:pointer;
+    transition:0.3s;
+}}
+
+.optionImg:hover{
+    transform:scale(1.05);
+    border-color:orange;
+}
+
+.correct{
+    border-color:green !important;
+}
+
+.wrong{
+    border-color:red !important;
+}
+
+#nextBtn,
+#restartBtn{
+    display:none;
+    padding:15px 35px;
+    font-size:22px;
+    background:orange;
+    color:black;
+    border:none;
+    border-radius:40px;
+    cursor:pointer;
+    margin-top:25px;
+    font-weight:bold;
+}
+
+#result{
+    font-size:38px;
+    color:orange;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧘 IDENTIFY THE CORRECT YOGA POSE 🧘</h1>
+
+<div class="top">
+    <div id="timer">⏳ Time Left : 30 sec</div>
+    <div id="score">Score : 0</div>
+</div>
+
+<div id="qno"></div>
+
+<div id="question"></div>
+
+<div id="options">
+    <img class="optionImg" id="img1">
+    <img class="optionImg" id="img2">
+</div>
+
+<button id="nextBtn" onclick="nextQuestion()">
+    Next Question ➜
+</button>
+
+<button id="restartBtn" onclick="restartQuiz()">
+    Restart Quiz
+</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+const quiz = [
+
+{
+    question:"Select the <b>Garudasana</b> pose",
+    options:[
+        "images/c1.jpg",
+        "images/w1.jpg"
+    ],
+    answer:"images/c1.jpg"
+},
+
+{
+    question:"Select the <b>Dhanurasana</b> Pose",
+    options:[
+        "images/c2.jpg",
+        "images/w2.jpg"
+    ],
+    answer:"images/c2.jpg"
+},
+
+{
+    question:"Select the <b>Utthita Parsavakonasana</b> Pose",
+    options:[
+        "images/c3.jpg",
+        "images/w3.jpg"
+    ],
+    answer:"images/c3.jpg"
+},
+
+{
+    question:"Select the <b>Setu Bandhasana</b>  Pose",
+    options:[
+        "images/c4.jpg",
+        "images/w4.jpg"
+    ],
+    answer:"images/c4.jpg"
+},
+{
+    question:"Select the <b>Sirsasana</b>  pose",
+    options:[
+        "images/c5.jpg",
+        "images/w5.jpg"
+    ],
+    answer:"images/c5.jpg"
+},
+{
+    question:"Select the <b>Salabhasana</b> pose",
+    options:[
+        "images/c6.jpg",
+        "images/w6.jpg"
+    ],
+    answer:"images/c6.jpg"
+},
+{
+    question:"Select the <b>Supta Matsyendrasana</b> pose",
+    options:[
+        "images/c7.jpg",
+        "images/w7.jpg"
+    ],
+    answer:"images/c7.jpg"
+},
+{
+    question:"Select the <b>Tadasana</b> pose",
+    options:[
+        "images/c8.jpg",
+        "images/w8.jpg"
+    ],
+    answer:"images/c8.jpg"
+},
+{
+    question:"Select the <b>Adho Mukha Svanasana</b> pose",
+    options:[
+        "images/c9.jpg",
+        "images/w9.jpg"
+    ],
+    answer:"images/c9.jpg"
+},
+{
+    question:"Select the <b>Virabhadrrasana II</b> pose",
+    options:[
+        "images/c10.jpg",
+        "images/w10.jpg"
+    ],
+    answer:"images/c10.jpg"
+},
+{
+    question:"Select the <b>Vriksasana</b> pose",
+    options:[
+        "images/c11.jpg",
+        "images/w11.jpg"
+    ],
+    answer:"images/c11.jpg"
+},
+{
+    question:"Select the <b>Bhujangasana</b> pose",
+    options:[
+        "images/c12.jpg",
+        "images/w12.jpg"
+    ],
+    answer:"images/c12.jpg"
+},
+{
+    question:"Select the <b>Trikonasana</b> pose",
+    options:[
+        "images/c13.jpg",
+        "images/w13.jpg"
+    ],
+    answer:"images/c13.jpg"
+},
+{
+    question:"Select the <b>Utkatasana</b> pose",
+    options:[
+        "images/c14.jpg",
+        "images/w14.jpg"
+    ],
+    answer:"images/c14.jpg"
+},
+{
+    question:"Select the <b>Phalakasana</b> pose",
+    options:[
+        "images/c15.jpg",
+        "images/w15.jpg"
+    ],
+    answer:"images/c15.jpg"
+},
+{
+    question:"Select the <b>Paschimottanasana</b> pose",
+    options:[
+        "images/c16.jpg",
+        "images/w16.jpg"
+    ],
+    answer:"images/c16.jpg"
+}
+
+
+];
+
+let current = 0;
+let score = 0;
+let time = 30;
+let timer;
+
+loadQuestion();
+
+function loadQuestion(){
+
+    clearInterval(timer);
+
+    document.getElementById("nextBtn").style.display="none";
+
+    time = 30;
+
+    document.getElementById("timer").innerHTML =
+    "⏳ Time Left : 30 sec";
+
+    document.getElementById("qno").innerHTML =
+    "Question " + (current+1) + " of " + quiz.length;
+
+    document.getElementById("question").innerHTML =
+    quiz[current].question;
+
+    let images =
+    document.getElementsByClassName("optionImg");
+
+    let currentOptions = [...quiz[current].options];
+
+// Randomly shuffle the two images
+currentOptions.sort(() => Math.random() - 0.5);
+
+for(let i=0;i<2;i++){
+
+    images[i].src =
+    currentOptions[i];
+
+    images[i].className =
+    "optionImg";
+
+    images[i].style.pointerEvents="auto";
+
+    images[i].onclick=function(){
+        checkAnswer(this);
+    };
+}
+    startTimer();
+}
+
+function startTimer(){
+
+    timer=setInterval(function(){
+
+        time--;
+
+        document.getElementById("timer").innerHTML =
+        "⏳ Time Left : " + time + " sec";
+
+        if(time<=0){
+
+            clearInterval(timer);
+
+            showCorrect();
+
+            document.getElementById("nextBtn")
+            .style.display="inline-block";
+        }
+
+    },1000);
+}
+
+function showCorrect(){
+
+    let correct = quiz[current].answer;
+
+    let images =
+    document.getElementsByClassName("optionImg");
+
+    for(let img of images){
+
+        img.style.pointerEvents="none";
+
+        if(img.src.includes(correct.split('/').pop())){
+
+            img.classList.add("correct");
+        }
+    }
+}
+
+function checkAnswer(selected){
+
+    clearInterval(timer);
+
+    let correct = quiz[current].answer;
+
+    let images =
+    document.getElementsByClassName("optionImg");
+
+    for(let img of images){
+
+        img.style.pointerEvents="none";
+
+        if(img.src.includes(correct.split('/').pop())){
+
+            img.classList.add("correct");
+        }
+    }
+
+    if(selected.src.includes(correct.split('/').pop())){
+
+        score++;
+
+        document.getElementById("score").innerHTML =
+        "Score : " + score;
+    }
+    else{
+
+        selected.classList.add("wrong");
+    }
+
+    document.getElementById("nextBtn")
+    .style.display="inline-block";
+}
+
+function nextQuestion(){
+
+    current++;
+
+    if(current < quiz.length){
+
+        loadQuestion();
+    }
+    else{
+
+        clearInterval(timer);
+
+        document.getElementById("qno").style.display="none";
+        document.getElementById("question").style.display="none";
+        document.getElementById("options").style.display="none";
+        document.getElementById("timer").style.display="none";
+        document.getElementById("nextBtn").style.display="none";
+
+        document.getElementById("restartBtn")
+        .style.display="inline-block";
+
+        document.getElementById("result").innerHTML =
+        "🎉 QUIZ COMPLETED 🎉<br><br>Your Score : "
+        + score + " / " + quiz.length;
+    }
+}
+
+function restartQuiz(){
+
+    current = 0;
+    score = 0;
+
+    document.getElementById("score").innerHTML =
+    "Score : 0";
+
+    document.getElementById("qno").style.display="block";
+    document.getElementById("question").style.display="block";
+    document.getElementById("options").style.display="flex";
+    document.getElementById("timer").style.display="block";
+
+    document.getElementById("restartBtn")
+    .style.display="none";
+
+    document.getElementById("result").innerHTML="";
+
+    loadQuestion();
+}
+
+</script>
+
+</body>
+</html>
+```
